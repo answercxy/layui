@@ -412,11 +412,19 @@ layui.define(['laytpl', 'laypage', 'layer', 'form'], function(exports){
       params[request.pageName] = curr;
       params[request.limitName] = options.limit;
       
+      //参数
+      var data = $.extend(params, options.where);
+      if(options.contentType && options.contentType.indexOf("application/json") == 0){ //提交 json 格式
+       data = JSON.stringify(data);
+      }
+
       $.ajax({
         type: options.method || 'get'
         ,url: options.url
-        ,data: $.extend(params, options.where)
+        ,contentType: options.contentType
+        ,data: data
         ,dataType: 'json'
+        ,headers: options.headers || {}
         ,success: function(res){
           if(res[response.statusName] != response.statusCode){
             that.renderForm();
